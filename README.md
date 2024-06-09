@@ -1,4 +1,5 @@
 # Stack-Based Arithmetic Calculator
+Created by Termie-dev
 
 An arithmetic calculator implemented in Java using two array-based stacks that have an amortized time complexity of O(1).
 
