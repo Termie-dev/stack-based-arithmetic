@@ -17,7 +17,6 @@ public class ArithmeticCalculator {
 		ExpandableArrayStack<String> results = new ExpandableArrayStack<>(); // Create array-based stack to hold the results for the output file.
 		
 		for (int i = 0; i < expressions.getSize(); i++) {
-			System.out.println(expressions.get(i));
             double result = evaluate(expressions.get(i));
             results.push(expressions.get(i) + " = " + result); // Push line containing expression and result onto final stack
         }
@@ -51,10 +50,14 @@ public class ArithmeticCalculator {
 	
 	private static void doOperation() {
 		
+		if (varStack.getSize() < 2) {
+            return;
+        }
+		
 		double x = varStack.pop();
 		double y = varStack.pop();
 		String op = opStack.pop();
-		
+				
 		double result = 0;
 		
 		switch (op) {
@@ -103,10 +106,11 @@ public class ArithmeticCalculator {
 		
         while (!opStack.isEmpty() && precedence(refOp) <= precedence(opStack.top())) { // Loops through operations as long as stack of operations is not empty.
         																			   // If the next operator is of smaller precedence, compute the higher precedence one first that is already in the operationStack
-            if (opStack.top() == "(") { // Stop when opening parenthesis is encountered to make sure we're doing the nested parenthesis first
-                opStack.pop(); // Remove the "(" from the stack.
+        	
+        	if (opStack.top() == "(") { // Stop when opening parenthesis is encountered to make sure we're doing the nested parenthesis first
             	break;
             }
+            
             doOperation();
         }
     }
@@ -122,17 +126,14 @@ public class ArithmeticCalculator {
              if (token.isEmpty()) {
                  continue; // Skip empty tokens
              }
-             System.out.println("Token: '" + token + "'"); // Debugging statement
              
              if (isNumber(token)) {
                  double num = Double.parseDouble(token);
                  varStack.push(num);
-                 System.out.println("Pushed number: " + num); // Debugging statement
              } 
              
              else if (token.equals("(")) {
                  opStack.push("(");
-                 System.out.println("Pushed operator: ("); // Debugging statement
              } 
              
              else if (token.equals(")")) {
@@ -141,7 +142,7 @@ public class ArithmeticCalculator {
                      doOperation();
                  }
                  
-                 if (!opStack.isEmpty()) {
+                 if (!opStack.isEmpty() && opStack.top().equals("(")) {
                      opStack.pop();
                  }
                  
@@ -161,10 +162,10 @@ public class ArithmeticCalculator {
             	 
                  repeatOperations(token);
                  opStack.push(token);
-                 System.out.println("Pushed operator: " + token); // Debugging statement
              }
          }
         
+        System.out.println("Expression computed: " + expression);
         repeatOperations("$");
         return varStack.pop(); // Return result from the line
     }
@@ -229,6 +230,9 @@ public class ArithmeticCalculator {
                 writer.newLine();
                 
             }
+    		
+    		System.out.println("\nResults written to: " + outputFileName);
+    		
         } 
     	
     	catch (IOException e) {
@@ -238,5 +242,3 @@ public class ArithmeticCalculator {
         }
     }
 }
-	
-
