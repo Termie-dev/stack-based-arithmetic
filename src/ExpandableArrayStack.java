@@ -15,7 +15,6 @@ public class ExpandableArrayStack<T> {
 		
 		if (size == stack.length) {
 			
-			System.out.println("Array is full. Doubling size");
 			resize(stack.length * 2);
 			
 		}
